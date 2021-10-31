@@ -101,9 +101,10 @@ void resize(int w, int h) {
 // 鼠标事件
 void mouse(int button, int state, int x, int y) {
     if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) {
+        //设定旋转初始值
         mouseRightDown = true;
         xdiff = x - yrot;
-        ydiff = -y + xrot;
+        ydiff = y - xrot;
         cout << "xdiff:" << xdiff << "\tydiff" << ydiff << endl;
     }
     else
@@ -113,8 +114,9 @@ void mouse(int button, int state, int x, int y) {
 // 鼠标移动事件
 void mouseMotion(int x, int y) {
     if (mouseRightDown) {
+        //鼠标滑动旋转
         yrot = x - xdiff;
-        xrot = y + ydiff;
+        xrot = y - ydiff;
         cout << "yrot:" << yrot << "\txrot" << xrot << endl;
 
         glutPostRedisplay();
