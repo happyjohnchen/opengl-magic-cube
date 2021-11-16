@@ -224,6 +224,71 @@ void drawBlock(Block block) {
 	drawCornerPoint(block.BackRightBottom);
 	drawCornerPoint(block.BackLeftBottom);
 	glEnd();
+
+	//描边
+	setGlColor(BLACK);
+	glLineWidth(5);
+	
+	glBegin(GL_LINES);
+	drawCornerPoint(block.FrontLeftTop);
+	drawCornerPoint(block.FrontRightTop);
+	glEnd();
+
+	glBegin(GL_LINES);
+	drawCornerPoint(block.FrontRightTop);
+	drawCornerPoint(block.BackRightTop);
+	glEnd();
+
+	glBegin(GL_LINES);
+	drawCornerPoint(block.BackRightTop);
+	drawCornerPoint(block.BackLeftTop);
+	glEnd();
+
+	glBegin(GL_LINES);
+	drawCornerPoint(block.BackLeftTop);
+	drawCornerPoint(block.FrontLeftTop);
+	glEnd();
+
+	glBegin(GL_LINES);
+	drawCornerPoint(block.BackLeftBottom);
+	drawCornerPoint(block.FrontLeftBottom);
+	glEnd();
+
+	glBegin(GL_LINES);
+	drawCornerPoint(block.FrontLeftBottom);
+	drawCornerPoint(block.FrontRightBottom);
+	glEnd();
+
+	glBegin(GL_LINES);
+	drawCornerPoint(block.FrontRightBottom);
+	drawCornerPoint(block.BackRightBottom);
+	glEnd();
+
+	glBegin(GL_LINES);
+	drawCornerPoint(block.BackRightBottom);
+	drawCornerPoint(block.BackLeftBottom);
+	glEnd();
+
+	glBegin(GL_LINES);
+	drawCornerPoint(block.FrontLeftTop);
+	drawCornerPoint(block.FrontLeftBottom);
+	glEnd();
+
+	glBegin(GL_LINES);
+	drawCornerPoint(block.FrontRightTop);
+	drawCornerPoint(block.FrontRightBottom);
+	glEnd();
+
+	glBegin(GL_LINES);
+	drawCornerPoint(block.BackLeftTop);
+	drawCornerPoint(block.BackLeftBottom);
+	glEnd();
+
+	glBegin(GL_LINES);
+	drawCornerPoint(block.BackRightTop);
+	drawCornerPoint(block.BackRightBottom);
+	glEnd();
+
 }
 
 // 绘制函数
