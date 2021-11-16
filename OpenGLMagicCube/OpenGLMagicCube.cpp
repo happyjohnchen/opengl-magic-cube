@@ -319,7 +319,7 @@ int main(int argc, char* argv[]) {
 	glutMotionFunc(mouseMotion);
 	glutReshapeFunc(resize);
 
-	glClearColor(0.93f, 0.93f, 0.93f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
