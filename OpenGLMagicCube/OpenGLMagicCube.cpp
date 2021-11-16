@@ -24,11 +24,19 @@ enum MyColors {
 	RED, YELLOW, BLUE, GREEN, ORANGE, WHITE, BLACK, CHOSEN
 };
 
+struct CornorPoint
+{
+	float x, y, z;
+};
+
 struct Block
 {
 	MyColors front = BLACK, back = BLACK, left = BLACK, right = BLACK, top = BLACK, bottom = BLACK;
-	float x, y, z;//位置是-1，0，1
+	float rotateX = 0, rotateY = 0, rotateZ = 0;
+	CornorPoint FrontLeftTop, FrontRightTop, FrontLeftBottom, FrontRightBottom, BackLeftTop, BackRightTop, BackLeftBottom, BackRightBottom;
+	//float x, y, z;//位置是-1，0，1
 };
+
 
 //方块数组，用于储存所有的魔方块
 Block cubeBlocks[3][3][3];
@@ -72,9 +80,71 @@ void cubeBlockInit() {
 		{
 			for (int k = 0; k < 3; k++)
 			{
-				cubeBlocks[i][j][k].x = i * 1.05f - 1;
-				cubeBlocks[i][j][k].y = j * 1.05f - 1;
-				cubeBlocks[i][j][k].z = k * 1.05f - 1;
+				cubeBlocks[i][j][k].FrontLeftTop.x = i  - 1.5f;
+				cubeBlocks[i][j][k].FrontLeftTop.y = j - 0.5f;
+				cubeBlocks[i][j][k].FrontLeftTop.z = k  - 0.5f;
+
+				cubeBlocks[i][j][k].FrontRightTop.x = i - 0.5f;
+				cubeBlocks[i][j][k].FrontRightTop.y = j  - 0.5f;
+				cubeBlocks[i][j][k].FrontRightTop.z = k  - 0.5f;
+
+				cubeBlocks[i][j][k].FrontLeftBottom.x = i  - 1.5f;
+				cubeBlocks[i][j][k].FrontLeftBottom.y = j  - 1.5f;
+				cubeBlocks[i][j][k].FrontLeftBottom.z = k  - 0.5f;
+
+				cubeBlocks[i][j][k].FrontRightBottom.x = i  - 0.5f;
+				cubeBlocks[i][j][k].FrontRightBottom.y = j  - 1.5f;
+				cubeBlocks[i][j][k].FrontRightBottom.z = k  - 0.5f;
+
+				cubeBlocks[i][j][k].BackLeftTop.x = i  - 1.5f;
+				cubeBlocks[i][j][k].BackLeftTop.y = j  - 0.5f;
+				cubeBlocks[i][j][k].BackLeftTop.z = k - 1.5f;
+
+				cubeBlocks[i][j][k].BackRightTop.x = i  - 0.5f;
+				cubeBlocks[i][j][k].BackRightTop.y = j  - 0.5f;
+				cubeBlocks[i][j][k].BackRightTop.z = k  - 1.5f;
+
+				cubeBlocks[i][j][k].BackLeftBottom.x = i - 1.5f;
+				cubeBlocks[i][j][k].BackLeftBottom.y = j - 1.5f;
+				cubeBlocks[i][j][k].BackLeftBottom.z = k - 1.5f;
+
+				cubeBlocks[i][j][k].BackRightBottom.x = i - 0.5f;
+				cubeBlocks[i][j][k].BackRightBottom.y = j  - 1.5f;
+				cubeBlocks[i][j][k].BackRightBottom.z = k  - 1.5f;
+
+				//
+
+				cubeBlocks[i][j][k].FrontLeftTop.x *= 1.05f;
+				cubeBlocks[i][j][k].FrontLeftTop.y *= 1.05f;
+				cubeBlocks[i][j][k].FrontLeftTop.z *= 1.05f;
+
+				cubeBlocks[i][j][k].FrontRightTop.x *= 1.05f;
+				cubeBlocks[i][j][k].FrontRightTop.y *= 1.05f;
+				cubeBlocks[i][j][k].FrontRightTop.z *= 1.05f;
+
+				cubeBlocks[i][j][k].FrontLeftBottom.x *= 1.05f;
+				cubeBlocks[i][j][k].FrontLeftBottom.y *= 1.05f;
+				cubeBlocks[i][j][k].FrontLeftBottom.z *= 1.05f;
+
+				cubeBlocks[i][j][k].FrontRightBottom.x *= 1.05f;
+				cubeBlocks[i][j][k].FrontRightBottom.y *= 1.05f;
+				cubeBlocks[i][j][k].FrontRightBottom.z *= 1.05f;
+
+				cubeBlocks[i][j][k].BackLeftTop.x *= 1.05f;
+				cubeBlocks[i][j][k].BackLeftTop.y *= 1.05f;
+				cubeBlocks[i][j][k].BackLeftTop.z *= 1.05f;
+
+				cubeBlocks[i][j][k].BackRightTop.x *= 1.05f;
+				cubeBlocks[i][j][k].BackRightTop.y *= 1.05f;
+				cubeBlocks[i][j][k].BackRightTop.z *= 1.05f;
+
+				cubeBlocks[i][j][k].BackLeftBottom.x *= 1.05f;
+				cubeBlocks[i][j][k].BackLeftBottom.y *= 1.05f;
+				cubeBlocks[i][j][k].BackLeftBottom.z *= 1.05f;
+
+				cubeBlocks[i][j][k].BackRightBottom.x *= 1.05f;
+				cubeBlocks[i][j][k].BackRightBottom.y *= 1.05f;
+				cubeBlocks[i][j][k].BackRightBottom.z *= 1.05f;
 				if (k == 2)
 				{
 					cubeBlocks[i][j][k].front = RED;
@@ -104,51 +174,55 @@ void cubeBlockInit() {
 	}
 }
 
+void drawCornerPoint(CornorPoint cp) {
+	glVertex3f(cp.x, cp.y, cp.z);
+}
+
 // 绘制正方体
 void drawBlock(Block block) {
 	glBegin(GL_QUADS);
 
 	// 前面
 	setGlColor(block.front);
-	glVertex3f(-0.5f + block.x, -0.5f + block.y, 0.5f + block.z);
-	glVertex3f(0.5f + block.x, -0.5f + block.y, 0.5f + block.z);
-	glVertex3f(0.5f + block.x, 0.5f + block.y, 0.5f + block.z);
-	glVertex3f(-0.5f + block.x, 0.5f + block.y, 0.5f + block.z);
+	drawCornerPoint(block.FrontLeftTop);
+	drawCornerPoint(block.FrontRightTop);
+	drawCornerPoint(block.FrontRightBottom);
+	drawCornerPoint(block.FrontLeftBottom);
 
 	// 后面
 	setGlColor(block.back);
-	glVertex3f(-0.5f + block.x, -0.5f + block.y, -0.5f + block.z);
-	glVertex3f(-0.5f + block.x, 0.5f + block.y, -0.5f + block.z);
-	glVertex3f(0.5f + block.x, 0.5f + block.y, -0.5f + block.z);
-	glVertex3f(0.5f + block.x, -0.5f + block.y, -0.5f + block.z);
+	drawCornerPoint(block.BackLeftTop);
+	drawCornerPoint(block.BackRightTop);
+	drawCornerPoint(block.BackRightBottom);
+	drawCornerPoint(block.BackLeftBottom);
 
 	// 左面
 	setGlColor(block.left);
-	glVertex3f(-0.5f + block.x, -0.5f + block.y, 0.5f + block.z);
-	glVertex3f(-0.5f + block.x, 0.5f + block.y, 0.5f + block.z);
-	glVertex3f(-0.5f + block.x, 0.5f + block.y, -0.5f + block.z);
-	glVertex3f(-0.5f + block.x, -0.5f + block.y, -0.5f + block.z);
+	drawCornerPoint(block.FrontLeftTop);
+	drawCornerPoint(block.FrontLeftBottom);
+	drawCornerPoint(block.BackLeftBottom);
+	drawCornerPoint(block.BackLeftTop);
 
 	// 右面
 	setGlColor(block.right);
-	glVertex3f(0.5f + block.x, -0.5f + block.y, -0.5f + block.z);
-	glVertex3f(0.5f + block.x, 0.5f + block.y, -0.5f + block.z);
-	glVertex3f(0.5f + block.x, 0.5f + block.y, 0.5f + block.z);
-	glVertex3f(0.5f + block.x, -0.5f + block.y, 0.5f + block.z);
+	drawCornerPoint(block.FrontRightTop);
+	drawCornerPoint(block.FrontRightBottom);
+	drawCornerPoint(block.BackRightBottom);
+	drawCornerPoint(block.BackRightTop);
 
 	// 顶面
 	setGlColor(block.top);
-	glVertex3f(-0.5f + block.x, 0.5f + block.y, 0.5f + block.z);
-	glVertex3f(0.5f + block.x, 0.5f + block.y, 0.5f + block.z);
-	glVertex3f(0.5f + block.x, 0.5f + block.y, -0.5f + block.z);
-	glVertex3f(-0.5f + block.x, 0.5f + block.y, -0.5f + block.z);
+	drawCornerPoint(block.FrontLeftTop);
+	drawCornerPoint(block.FrontRightTop);
+	drawCornerPoint(block.BackRightTop);
+	drawCornerPoint(block.BackLeftTop);
 
 	// 底面
 	setGlColor(block.bottom);
-	glVertex3f(-0.5f + block.x, -0.5f + block.y, 0.5f + block.z);
-	glVertex3f(-0.5f + block.x, -0.5f + block.y, -0.5f + block.z);
-	glVertex3f(0.5f + block.x, -0.5f + block.y, -0.5f + block.z);
-	glVertex3f(0.5f + block.x, -0.5f + block.y, 0.5f + block.z);
+	drawCornerPoint(block.FrontLeftBottom);
+	drawCornerPoint(block.FrontRightBottom);
+	drawCornerPoint(block.BackRightBottom);
+	drawCornerPoint(block.BackLeftBottom);
 	glEnd();
 }
 
@@ -174,9 +248,6 @@ void display() {
 	testBlock.right = GREEN;
 	testBlock.top = YELLOW;
 	testBlock.bottom = WHITE;
-	testBlock.x = 1;
-	testBlock.y = 1;
-	testBlock.z = 1;
 
 	//drawBlock(testBlock);
 	for (int i = 0; i < 3; i++)
