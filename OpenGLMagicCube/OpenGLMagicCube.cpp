@@ -18,6 +18,7 @@ float yrot = 0.0f;
 float xdiff = 0.0f;
 float ydiff = 0.0f;
 
+int angle = 0;
 
 enum MyColors {
 	//各个面的颜色
@@ -180,6 +181,10 @@ void drawCornerPoint(CornorPoint cp) {
 
 // 绘制正方体
 void drawBlock(Block block) {
+	float x = block.FrontLeftTop.x;
+	block.FrontLeftTop.x = 0;
+	block.FrontLeftTop.x = x;
+
 	glBegin(GL_QUADS);
 
 	// 前面
@@ -326,7 +331,7 @@ void display() {
 		}
 	}
 
-	glFlush();
+	//glFlush();
 	glutSwapBuffers();
 }
 
