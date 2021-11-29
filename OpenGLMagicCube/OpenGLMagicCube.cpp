@@ -31,7 +31,7 @@ enum MyColors {
 	RED, YELLOW, BLUE, GREEN, ORANGE, WHITE, BLACK, CHOSEN
 };
 
-struct CornorPoint
+struct CornerPoint
 {
 	float x, y, z;
 };
@@ -41,9 +41,13 @@ struct Block
 	//每个面的颜色
 	MyColors front = BLACK, back = BLACK, left = BLACK, right = BLACK, top = BLACK, bottom = BLACK;
 	float rotateX = 0, rotateY = 0, rotateZ = 0;//小方块 旋转变量
-	CornorPoint FrontLeftTop, FrontRightTop, FrontLeftBottom, FrontRightBottom, BackLeftTop, BackRightTop, BackLeftBottom, BackRightBottom;
+	CornerPoint FrontLeftTop, FrontRightTop, FrontLeftBottom, FrontRightBottom, BackLeftTop, BackRightTop, BackLeftBottom, BackRightBottom;
+	CornerPoint center;
 	//float x, y, z;//位置是-1，0，1
 };
+
+Block rotatingBlocks[9] = {};
+int rotatingBlocksNum = 0;
 
 
 //方块数组，用于储存所有的魔方块
@@ -184,7 +188,7 @@ void cubeBlockInit() {
 	}
 }
 
-void drawCornerPoint(CornorPoint cp, Block block) {
+void drawCornerPoint(CornerPoint cp, Block block) {
 	glVertex3f(cp.x, cp.y, cp.z);
 }
 
@@ -195,7 +199,11 @@ void rotateCube(char rotation) {
 	}
 	switch (rotation) {
 	case 'a':
-		
+		for (int i = 0; i < 27; i++) {
+
+		}
+		printf("is rotating a\n");
+		break;
 	default:
 		return;
 	}
@@ -399,7 +407,8 @@ void mouseMotion(int x, int y) {
 //键盘响应
 void keyboardMotion(unsigned char key, int x, int y) {
 	printf("%c,%d,%d\n", key, x, y);
-	//rotateCube(key);
+	rotateCube(key);
+	/*
 	switch (key)
 	{
 	case 's':
@@ -424,6 +433,7 @@ void keyboardMotion(unsigned char key, int x, int y) {
 		break;
 	}
 	printf("rot(%f,%f,%f)\n", rotX, rotY, rotZ);
+	*/
 	//刷新屏幕
 	glutPostRedisplay();
 }
