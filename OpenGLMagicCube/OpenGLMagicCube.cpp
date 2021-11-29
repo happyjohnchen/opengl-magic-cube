@@ -9,6 +9,8 @@
 
 using namespace std;
 
+bool mouseControlView = true;//鼠标右键更改视角，改为false后不可使用鼠标右键更改视角
+
 bool mouseLeftDown = false;
 bool mouseRightDown = false;
 
@@ -48,6 +50,7 @@ struct Block
 
 Block rotatingBlocks[9] = {};
 int rotatingBlocksNum = 0;
+bool rotatingDirection = true;//旋转方向，顺时针逆时针
 
 
 //方块数组，用于储存所有的魔方块
@@ -202,9 +205,17 @@ void rotateCube(char rotation) {
 		return;
 	}
 	switch (rotation) {
-	case 'a':
-		for (int i = 0; i < 27; i++) {
+	case 'r':
+		rotatingBlocksNum = 0;
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				for (int k = 0; k < 3; k++) {
+					if (cubeBlocks[i][j][k].center.x == 1.0f) {
+						rotatingBlocks[rotatingBlocksNum] = cubeBlocks[i][j][k];
 
+					}
+				}
+			}
 		}
 		printf("is rotating a\n");
 		break;
@@ -216,10 +227,6 @@ void rotateCube(char rotation) {
 
 // 绘制正方体
 void drawBlock(Block block) {
-
-	glRotatef(rotX, 1.0f, 0.0f, 0.0f);
-	glRotatef(rotY, 0.0f, 1.0f, 0.0f);
-	glRotatef(rotZ, 0.0f, 0.0f, 1.0f);
 
 	glBegin(GL_QUADS);
 
@@ -356,6 +363,20 @@ void display() {
 	testBlock.bottom = WHITE;
 
 	//drawBlock(testBlock);
+	//拧魔方
+	if (isRotating) {
+		rotateAngle++;
+		if (rotateAngle >= 90)
+		{
+			isRotating = false;
+			rotateAngle = 0;
+		}
+	}
+
+	glRotatef(rotX, 1.0f, 0.0f, 0.0f);
+	glRotatef(rotY, 0.0f, 1.0f, 0.0f);
+	glRotatef(rotZ, 0.0f, 0.0f, 1.0f);
+
 	for (int i = 0; i < 3; i++)
 	{
 		for (int j = 0; j < 3; j++)
@@ -385,7 +406,7 @@ void resize(int w, int h) {
 
 // 鼠标事件
 void mouse(int button, int state, int x, int y) {
-	if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) {
+	if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN && mouseControlView) {
 		//设定旋转初始值
 		mouseRightDown = true;
 		xdiff = x - yrot;
@@ -416,22 +437,22 @@ void keyboardMotion(unsigned char key, int x, int y) {
 	switch (key)
 	{
 	case 's':
-		rotX += 1.0f;
+		rotX += 5.0f;
 		break;
 	case 'w':
-		rotX -= 1.0f;
+		rotX -= 5.0f;
 		break;
 	case 'd':
-		rotY += 1.0f;
+		rotY += 5.0f;
 		break;
 	case 'a':
-		rotY -= 1.0f;
+		rotY -= 5.0f;
 		break;
 	case 'q':
-		rotZ += 1.0f;
+		rotZ += 5.0f;
 		break;
 	case 'e':
-		rotZ -= 1.0f;
+		rotZ -= 5.0f;
 		break;
 	default:
 		break;
