@@ -92,6 +92,10 @@ void cubeBlockInit() {
 		{
 			for (int k = 0; k < 3; k++)
 			{
+				cubeBlocks[i][j][k].center.x = i - 1;
+				cubeBlocks[i][j][k].center.y = j - 1;
+				cubeBlocks[i][j][k].center.z = k - 1;
+
 				cubeBlocks[i][j][k].FrontLeftTop.x = i  - 1.5f;
 				cubeBlocks[i][j][k].FrontLeftTop.y = j - 0.5f;
 				cubeBlocks[i][j][k].FrontLeftTop.z = k  - 0.5f;
@@ -408,7 +412,7 @@ void mouseMotion(int x, int y) {
 void keyboardMotion(unsigned char key, int x, int y) {
 	printf("%c,%d,%d\n", key, x, y);
 	rotateCube(key);
-	/*
+	
 	switch (key)
 	{
 	case 's':
@@ -433,7 +437,7 @@ void keyboardMotion(unsigned char key, int x, int y) {
 		break;
 	}
 	printf("rot(%f,%f,%f)\n", rotX, rotY, rotZ);
-	*/
+	
 	//刷新屏幕
 	glutPostRedisplay();
 }
