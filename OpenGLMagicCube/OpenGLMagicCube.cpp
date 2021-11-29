@@ -18,7 +18,13 @@ float yrot = 0.0f;
 float xdiff = 0.0f;
 float ydiff = 0.0f;
 
-int angle = 0;
+bool isRotating = false;
+int rotateAngle = 0;
+
+//全局旋转变量
+GLfloat rotX = 0;
+GLfloat rotY = 0;
+GLfloat rotZ = 0;
 
 enum MyColors {
 	//各个面的颜色
@@ -32,8 +38,9 @@ struct CornorPoint
 
 struct Block
 {
+	//每个面的颜色
 	MyColors front = BLACK, back = BLACK, left = BLACK, right = BLACK, top = BLACK, bottom = BLACK;
-	float rotateX = 0, rotateY = 0, rotateZ = 0;
+	float rotateX = 0, rotateY = 0, rotateZ = 0;//小方块 旋转变量
 	CornorPoint FrontLeftTop, FrontRightTop, FrontLeftBottom, FrontRightBottom, BackLeftTop, BackRightTop, BackLeftBottom, BackRightBottom;
 	//float x, y, z;//位置是-1，0，1
 };
@@ -113,7 +120,7 @@ void cubeBlockInit() {
 				cubeBlocks[i][j][k].BackRightBottom.y = j  - 1.5f;
 				cubeBlocks[i][j][k].BackRightBottom.z = k  - 1.5f;
 
-				//
+				/*
 
 				cubeBlocks[i][j][k].FrontLeftTop.x *= 1.05f;
 				cubeBlocks[i][j][k].FrontLeftTop.y *= 1.05f;
@@ -146,6 +153,8 @@ void cubeBlockInit() {
 				cubeBlocks[i][j][k].BackRightBottom.x *= 1.05f;
 				cubeBlocks[i][j][k].BackRightBottom.y *= 1.05f;
 				cubeBlocks[i][j][k].BackRightBottom.z *= 1.05f;
+
+				*/
 				if (k == 2)
 				{
 					cubeBlocks[i][j][k].front = RED;
@@ -175,59 +184,74 @@ void cubeBlockInit() {
 	}
 }
 
-void drawCornerPoint(CornorPoint cp) {
+void drawCornerPoint(CornorPoint cp, Block block) {
 	glVertex3f(cp.x, cp.y, cp.z);
+}
+
+//旋转函数
+void rotateCube(char rotation) {
+	if (isRotating) {
+		return;
+	}
+	switch (rotation) {
+	case 'a':
+		
+	default:
+		return;
+	}
+	isRotating = true;//标记为正在旋转
 }
 
 // 绘制正方体
 void drawBlock(Block block) {
-	float x = block.FrontLeftTop.x;
-	block.FrontLeftTop.x = 0;
-	block.FrontLeftTop.x = x;
+
+	glRotatef(rotX, 1.0f, 0.0f, 0.0f);
+	glRotatef(rotY, 0.0f, 1.0f, 0.0f);
+	glRotatef(rotZ, 0.0f, 0.0f, 1.0f);
 
 	glBegin(GL_QUADS);
 
 	// 前面
 	setGlColor(block.front);
-	drawCornerPoint(block.FrontLeftTop);
-	drawCornerPoint(block.FrontRightTop);
-	drawCornerPoint(block.FrontRightBottom);
-	drawCornerPoint(block.FrontLeftBottom);
+	drawCornerPoint(block.FrontLeftTop, block);
+	drawCornerPoint(block.FrontRightTop, block);
+	drawCornerPoint(block.FrontRightBottom, block);
+	drawCornerPoint(block.FrontLeftBottom, block);
 
 	// 后面
 	setGlColor(block.back);
-	drawCornerPoint(block.BackLeftTop);
-	drawCornerPoint(block.BackRightTop);
-	drawCornerPoint(block.BackRightBottom);
-	drawCornerPoint(block.BackLeftBottom);
+	drawCornerPoint(block.BackLeftTop, block);
+	drawCornerPoint(block.BackRightTop, block);
+	drawCornerPoint(block.BackRightBottom, block);
+	drawCornerPoint(block.BackLeftBottom, block);
 
 	// 左面
 	setGlColor(block.left);
-	drawCornerPoint(block.FrontLeftTop);
-	drawCornerPoint(block.FrontLeftBottom);
-	drawCornerPoint(block.BackLeftBottom);
-	drawCornerPoint(block.BackLeftTop);
+	drawCornerPoint(block.FrontLeftTop, block);
+	drawCornerPoint(block.FrontLeftBottom, block);
+	drawCornerPoint(block.BackLeftBottom, block);
+	drawCornerPoint(block.BackLeftTop, block);
 
 	// 右面
 	setGlColor(block.right);
-	drawCornerPoint(block.FrontRightTop);
-	drawCornerPoint(block.FrontRightBottom);
-	drawCornerPoint(block.BackRightBottom);
-	drawCornerPoint(block.BackRightTop);
+	drawCornerPoint(block.FrontRightTop, block);
+	drawCornerPoint(block.FrontRightBottom, block);
+	drawCornerPoint(block.BackRightBottom, block);
+	drawCornerPoint(block.BackRightTop, block);
 
 	// 顶面
 	setGlColor(block.top);
-	drawCornerPoint(block.FrontLeftTop);
-	drawCornerPoint(block.FrontRightTop);
-	drawCornerPoint(block.BackRightTop);
-	drawCornerPoint(block.BackLeftTop);
+	drawCornerPoint(block.FrontLeftTop, block);
+	drawCornerPoint(block.FrontRightTop, block);
+	drawCornerPoint(block.BackRightTop, block);
+	drawCornerPoint(block.BackLeftTop, block);
 
 	// 底面
 	setGlColor(block.bottom);
-	drawCornerPoint(block.FrontLeftBottom);
-	drawCornerPoint(block.FrontRightBottom);
-	drawCornerPoint(block.BackRightBottom);
-	drawCornerPoint(block.BackLeftBottom);
+	drawCornerPoint(block.FrontLeftBottom, block);
+	drawCornerPoint(block.FrontRightBottom, block);
+	drawCornerPoint(block.BackRightBottom, block);
+	drawCornerPoint(block.BackLeftBottom, block);
 	glEnd();
 
 	//描边
@@ -235,63 +259,63 @@ void drawBlock(Block block) {
 	glLineWidth(5);
 	
 	glBegin(GL_LINES);
-	drawCornerPoint(block.FrontLeftTop);
-	drawCornerPoint(block.FrontRightTop);
+	drawCornerPoint(block.FrontLeftTop, block);
+	drawCornerPoint(block.FrontRightTop, block);
 	glEnd();
 
 	glBegin(GL_LINES);
-	drawCornerPoint(block.FrontRightTop);
-	drawCornerPoint(block.BackRightTop);
+	drawCornerPoint(block.FrontRightTop, block);
+	drawCornerPoint(block.BackRightTop, block);
 	glEnd();
 
 	glBegin(GL_LINES);
-	drawCornerPoint(block.BackRightTop);
-	drawCornerPoint(block.BackLeftTop);
+	drawCornerPoint(block.BackRightTop, block);
+	drawCornerPoint(block.BackLeftTop, block);
 	glEnd();
 
 	glBegin(GL_LINES);
-	drawCornerPoint(block.BackLeftTop);
-	drawCornerPoint(block.FrontLeftTop);
+	drawCornerPoint(block.BackLeftTop, block);
+	drawCornerPoint(block.FrontLeftTop, block);
 	glEnd();
 
 	glBegin(GL_LINES);
-	drawCornerPoint(block.BackLeftBottom);
-	drawCornerPoint(block.FrontLeftBottom);
+	drawCornerPoint(block.BackLeftBottom, block);
+	drawCornerPoint(block.FrontLeftBottom, block);
 	glEnd();
 
 	glBegin(GL_LINES);
-	drawCornerPoint(block.FrontLeftBottom);
-	drawCornerPoint(block.FrontRightBottom);
+	drawCornerPoint(block.FrontLeftBottom, block);
+	drawCornerPoint(block.FrontRightBottom, block);
 	glEnd();
 
 	glBegin(GL_LINES);
-	drawCornerPoint(block.FrontRightBottom);
-	drawCornerPoint(block.BackRightBottom);
+	drawCornerPoint(block.FrontRightBottom, block);
+	drawCornerPoint(block.BackRightBottom, block);
 	glEnd();
 
 	glBegin(GL_LINES);
-	drawCornerPoint(block.BackRightBottom);
-	drawCornerPoint(block.BackLeftBottom);
+	drawCornerPoint(block.BackRightBottom, block);
+	drawCornerPoint(block.BackLeftBottom, block);
 	glEnd();
 
 	glBegin(GL_LINES);
-	drawCornerPoint(block.FrontLeftTop);
-	drawCornerPoint(block.FrontLeftBottom);
+	drawCornerPoint(block.FrontLeftTop, block);
+	drawCornerPoint(block.FrontLeftBottom, block);
 	glEnd();
 
 	glBegin(GL_LINES);
-	drawCornerPoint(block.FrontRightTop);
-	drawCornerPoint(block.FrontRightBottom);
+	drawCornerPoint(block.FrontRightTop, block);
+	drawCornerPoint(block.FrontRightBottom, block);
 	glEnd();
 
 	glBegin(GL_LINES);
-	drawCornerPoint(block.BackLeftTop);
-	drawCornerPoint(block.BackLeftBottom);
+	drawCornerPoint(block.BackLeftTop, block);
+	drawCornerPoint(block.BackLeftBottom, block);
 	glEnd();
 
 	glBegin(GL_LINES);
-	drawCornerPoint(block.BackRightTop);
-	drawCornerPoint(block.BackRightBottom);
+	drawCornerPoint(block.BackRightTop, block);
+	drawCornerPoint(block.BackRightBottom, block);
 	glEnd();
 
 }
@@ -372,6 +396,38 @@ void mouseMotion(int x, int y) {
 	}
 }
 
+//键盘响应
+void keyboardMotion(unsigned char key, int x, int y) {
+	printf("%c,%d,%d\n", key, x, y);
+	//rotateCube(key);
+	switch (key)
+	{
+	case 's':
+		rotX += 1.0f;
+		break;
+	case 'w':
+		rotX -= 1.0f;
+		break;
+	case 'd':
+		rotY += 1.0f;
+		break;
+	case 'a':
+		rotY -= 1.0f;
+		break;
+	case 'q':
+		rotZ += 1.0f;
+		break;
+	case 'e':
+		rotZ -= 1.0f;
+		break;
+	default:
+		break;
+	}
+	printf("rot(%f,%f,%f)\n", rotX, rotY, rotZ);
+	//刷新屏幕
+	glutPostRedisplay();
+}
+
 int main(int argc, char* argv[]) {
 	cubeBlockInit();
 	
@@ -388,6 +444,7 @@ int main(int argc, char* argv[]) {
 	glutMouseFunc(mouse);
 	glutMotionFunc(mouseMotion);
 	glutReshapeFunc(resize);
+	glutKeyboardFunc(keyboardMotion);
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
